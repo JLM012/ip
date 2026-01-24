@@ -22,6 +22,7 @@ public class Ui {
     //prints the current list of tasks after command "list" is given.
     public void showList(TaskList tasks) {
         System.out.println("____________________________________________________________");
+        System.out.println("Here are the tasks in your list:");
         for (int i = 0; i < tasks.getSize(); i++) {
             System.out.println((i + 1) + ". " + tasks.getTask(i));
         }
@@ -32,6 +33,22 @@ public class Ui {
     public void showBye() {
         System.out.println("____________________________________________________________");
         System.out.println("It was a pleasure assisting you! Goodbye!");
+        System.out.println("____________________________________________________________");
+    }
+
+    //prints marked tast specified
+    public void showMark(Task task) {
+        System.out.println("____________________________________________________________");
+        System.out.println("Nice! I've marked this task as done:");
+        System.out.println("   " + task);
+        System.out.println("____________________________________________________________");
+    }
+
+    //prints unmarked task specified
+    public void showUnmark(Task task) {
+        System.out.println("____________________________________________________________");
+        System.out.println("OK, I've marked this task as not done yet:");
+        System.out.println("   " + task);
         System.out.println("____________________________________________________________");
     }
 
