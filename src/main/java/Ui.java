@@ -54,9 +54,19 @@ public class Ui {
         System.out.println("____________________________________________________________");
     }
 
+    //print error messages
     public void showError(String message) {
         System.out.println("____________________________________________________________");
         System.out.println(message);
+        System.out.println("____________________________________________________________");
+    }
+
+    //prints a confirmation message after a task was deleted.
+    public void showDeleted(Task task, int totalTasks) {
+        System.out.println("____________________________________________________________");
+        System.out.println("Done. I've deleted this task:" );
+        System.out.println("   " + task);
+        System.out.println("Now you have " + totalTasks + " tasks in the list" );
         System.out.println("____________________________________________________________");
     }
 

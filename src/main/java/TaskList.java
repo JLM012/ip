@@ -1,30 +1,35 @@
+import java.util.*;
+
 public class TaskList {
 
-    //Store up to 100 Task
-    private Task[] tasks = new Task[100];
-    private int size = 0;
+    private ArrayList<Task> tasks = new ArrayList<>();
+
 
     public void addTask(Task task) {
-        tasks[size] = task;
-        size++;
+        tasks.add(task);
     }
 
     public int getSize() {
-        return size;
+        return tasks.size();
     }
 
     public Task getTask(int index) {
-        return tasks[index];
+        return tasks.get(index);
     }
 
     public Task mark(int index) {
-        tasks[index].markAsDone();
-        return tasks[index];
+        tasks.get(index).markAsDone();
+        return tasks.get(index);
     }
 
     public Task unmark(int index) {
-        tasks[index].markAsNotDone();
-        return tasks[index];
+        tasks.get(index).markAsNotDone();
+        return tasks.get(index);
+    }
+
+    public Task deleteTask(int index) {
+        Task removed = tasks.remove(index);
+        return removed;
     }
 
 }

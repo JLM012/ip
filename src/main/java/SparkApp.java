@@ -14,7 +14,7 @@ public class SparkApp {
         // command "bye" exits the chatbot
         while (true) {
             String input = ui.readCommand();
-            
+
             if (input.equals("bye")) {
                 ui.showBye();
                 break;
@@ -73,9 +73,15 @@ public class SparkApp {
             tasks.addTask(event);
             int totalTasks = tasks.getSize();
             ui.showAdded(event, totalTasks);
+        } else if (command.equals("delete")) {
+            int index = Integer.parseInt(args[1]) - 1;
+            Task deleted = tasks.deleteTask(index);
+            int totalTasks = tasks.getSize();
+            ui.showDeleted(deleted, totalTasks);
         } else {
             throw new SparkException("The input you provided is invalid");
         }
+
     }
 
 }
