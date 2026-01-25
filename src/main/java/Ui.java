@@ -54,6 +54,12 @@ public class Ui {
         System.out.println("____________________________________________________________");
     }
 
+    public void showError(String message) {
+        System.out.println("____________________________________________________________");
+        System.out.println(message);
+        System.out.println("____________________________________________________________");
+    }
+
     public String readCommand() {
         return scanner.nextLine();
     }
