@@ -1,12 +1,11 @@
-
 public class TaskList {
 
     //Store up to 100 Task
     private Task[] tasks = new Task[100];
     private int size = 0;
 
-    public void addTask(String description) {
-        tasks[size] = new Task(description);
+    public void addTask(Task task) {
+        tasks[size] = task;
         size++;
     }
 

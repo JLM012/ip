@@ -13,9 +13,11 @@ public class Ui {
     }
 
     //prints a confirmation message after a task was added.
-    public void showAdded(String task) {
+    public void showAdded(Task task, int totalTasks) {
         System.out.println("____________________________________________________________");
-        System.out.println("added: " + task);
+        System.out.println("Done. I've added this task:" );
+        System.out.println("   " + task);
+        System.out.println("Now you have " + totalTasks + " tasks in the list" );
         System.out.println("____________________________________________________________");
     }
 
