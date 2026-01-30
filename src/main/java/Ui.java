@@ -1,4 +1,4 @@
-import java.util.*;
+import java.util.Scanner;
 
 //Responsible for reading user input and printing responses.
 public class Ui {
