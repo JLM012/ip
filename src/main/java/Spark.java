@@ -58,75 +58,48 @@ public class Spark {
     }
 
     private void handleInput(String input) throws SparkException {
-        String[] args = input.split(" ", 2);
-        String command = args[0];
-        String rest = (args.length == 2) ? args[1] : "";
+        String[] parsedInput = Parser.parse(input);
+        String command = parsedInput[0];
+        String rest = parsedInput[1];
 
         if (command.equals("list")) {
             ui.showList(tasks);
 
         } else if (command.equals("mark")) {
-            int index = Integer.parseInt(args[1]) - 1;
+            int index = Parser.parseIndex(rest, "Mark format: mark <taskNumber>");
             Task marked = tasks.mark(index);
             ui.showMark(marked);
             storage.save(tasks);
 
         } else if (command.equals("unmark")) {
-            int index = Integer.parseInt(args[1]) - 1;
+            int index = Parser.parseIndex(rest, "Unmark format: unmark <taskNumber>");
             Task unmarked = tasks.unmark(index);
             ui.showUnmark(unmarked);
             storage.save(tasks);
 
         } else if (command.equals("todo")) {
-            if (rest.isEmpty()) {
-                throw new SparkException("Please provide a description for todo. Example: todo read book");
-            }
-            Task todo = new Todo(rest);
+            Task todo = Parser.parseTodo(rest);
             tasks.addTask(todo);
             int totalTasks = tasks.getSize();
             ui.showAdded(todo, totalTasks);
             storage.save(tasks);
 
         } else if (command.equals("deadline")) {
-            String[] deadlineArgs = rest.split(" /by ", 2);
-            if (deadlineArgs.length < 2) {
-                throw new SparkException("Deadline format: deadline <desc> /by <yyyy-MM-dd HHmm>");
-            }
-            String description = deadlineArgs[0].trim();
-            String byString = deadlineArgs[1].trim();
-            if (description.isEmpty() || byString.isEmpty()) {
-                throw new SparkException("Deadline format: deadline <desc> /by <yyyy-MM-dd HHmm>");
-            }
-
-            LocalDateTime by;
-            try {
-                DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
-                by = LocalDateTime.parse(byString, deadlineFormat);
-            } catch (DateTimeParseException e) {
-            throw new SparkException("Invalid deadline date/time format. " +
-                    "Please use yyyy-MM-dd HHmm, e.g. 2025-01-25 1200");
-            }
-            
-            Task deadline = new Deadline(description, by);
+            Task deadline = Parser.parseDeadline(rest);
             tasks.addTask(deadline);
             int totalTasks = tasks.getSize();
             ui.showAdded(deadline, totalTasks);
             storage.save(tasks);
 
         } else if (command.equals("event")) {
-            String[] eventArgs = rest.split(" /from ", 2);
-            String description = eventArgs[0];
-            String[] fromTo = eventArgs[1].split(" /to ", 2);
-            String from = fromTo[0];
-            String to = fromTo[1];
-            Task event = new Event(description, from, to);
+            Task event = Parser.parseEvent(rest);
             tasks.addTask(event);
             int totalTasks = tasks.getSize();
             ui.showAdded(event, totalTasks);
             storage.save(tasks);
 
         } else if (command.equals("delete")) {
-            int index = Integer.parseInt(args[1]) - 1;
+            int index = Parser.parseIndex(rest, "Delete format: delete <taskNumber>");
             Task deleted = tasks.deleteTask(index);
             int totalTasks = tasks.getSize();
             ui.showDeleted(deleted, totalTasks);
