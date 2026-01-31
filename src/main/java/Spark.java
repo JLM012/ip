@@ -1,4 +1,7 @@
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +11,8 @@ public class Spark {
     private TaskList tasks;
     private final Storage storage = new Storage(Paths.get("data", "spark.txt"));
     private boolean didLoadFail = false;
-    private String loadFailMessage = "";
+    private String loadFailedMessage = "";
+
 
     public Spark() {
         try {
@@ -17,7 +21,7 @@ public class Spark {
         } catch (SparkException e) {
             this.tasks = new TaskList();
             didLoadFail = true;
-            loadFailMessage = e.getMessage();
+            loadFailedMessage = e.getMessage();
         }
     }
 
@@ -25,13 +29,14 @@ public class Spark {
         ui.showWelcome();
 
         if (didLoadFail) {
-            ui.showError("Saved tasks could not be loaded, reverting to empty list");
+            ui.showError("Saved tasks could not be loaded," +
+                    " reverting to empty list \nReason: " + loadFailedMessage);
         }
 
         // reads user input and adds to tasklist.
         // command "list" displays the current list.
         // command "mark" or "unmark" marks/unmark task at specified index
-        // Tasks can be added using command "todo", "deadline", "event"
+        // Tasks can be added using command "todo", "by", "event"
         // command "bye" exits the chatbot
         while (true) {
             String input = ui.readCommand();
@@ -74,7 +79,7 @@ public class Spark {
 
         } else if (command.equals("todo")) {
             if (rest.isEmpty()) {
-                throw new SparkException("Please provide a descrioption for todo. Example: todo read book");
+                throw new SparkException("Please provide a description for todo. Example: todo read book");
             }
             Task todo = new Todo(rest);
             tasks.addTask(todo);
@@ -84,8 +89,24 @@ public class Spark {
 
         } else if (command.equals("deadline")) {
             String[] deadlineArgs = rest.split(" /by ", 2);
-            String description = deadlineArgs[0];
-            String by = deadlineArgs[1];
+            if (deadlineArgs.length < 2) {
+                throw new SparkException("Deadline format: deadline <desc> /by <yyyy-MM-dd HHmm>");
+            }
+            String description = deadlineArgs[0].trim();
+            String byString = deadlineArgs[1].trim();
+            if (description.isEmpty() || byString.isEmpty()) {
+                throw new SparkException("Deadline format: deadline <desc> /by <yyyy-MM-dd HHmm>");
+            }
+
+            LocalDateTime by;
+            try {
+                DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+                by = LocalDateTime.parse(byString, deadlineFormat);
+            } catch (DateTimeParseException e) {
+            throw new SparkException("Invalid deadline date/time format. " +
+                    "Please use yyyy-MM-dd HHmm, e.g. 2025-01-25 1200");
+            }
+            
             Task deadline = new Deadline(description, by);
             tasks.addTask(deadline);
             int totalTasks = tasks.getSize();

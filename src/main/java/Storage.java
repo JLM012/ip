@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class Storage {
             ArrayList<String> lines = new ArrayList<>();
             for (int i = 0; i < tasks.getSize(); i++) {
                 Task t = tasks.getTask(i);
-                lines.add(t.toFileString());
+                lines.add(t.toSaveString());
             }
 
             Files.write(filePath, lines, CREATE, TRUNCATE_EXISTING);
@@ -83,11 +85,13 @@ public class Storage {
             if (parts.length < 4) {
                 throw new SparkException("Deadline task data was corrupted");
             }
-            task = new Deadline(description, parts[3]);
+            DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("MMM d yyyy, h:mma");
+            LocalDateTime deadlineDateTime = LocalDateTime.parse(parts[3], deadlineFormat);
+            task = new Deadline(description, deadlineDateTime);
             break;
 
         case "E":
-            if (parts.length < 5    ) {
+            if (parts.length < 5) {
                 throw new SparkException("Event task data was corrupted");
             }
             task = new Event(description, parts[3], parts[4]);
