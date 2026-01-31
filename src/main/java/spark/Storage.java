@@ -11,13 +11,34 @@ import java.util.List;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 
+/**
+ * Handles saving and loading of tasks to and from a save file on disk.
+ * <p>
+ * The save file is stored at the configured Path.
+ * <p>
+ * This class is responsible for:
+ *  <ul>
+ *    <li>Creating the data folder if it does not exist.</li>
+ *    <li>Writing the current task list to disk.</li>
+ *    <li>Reading tasks from disk and converting each line back into a {@link Task}.</li>
+ *  </ul>
+ */
 public class Storage {
     private Path filePath;
 
+    /**
+     * Creates a {@code Storage} that reads/writes tasks at the given file path.
+     * @param filePath Path to the save file {@code data/spark.txt}.
+     */
     public Storage(Path filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Saves the given task list to disk.
+     * @param tasks The taskList to be saved
+     * @throws SparkException If an {@link IOException} occurs while writing the file.
+     */
     public void save(TaskList tasks) throws SparkException {
         try {
             ensureDataFolderExists();
@@ -37,6 +58,14 @@ public class Storage {
 
     }
 
+    /**
+     * Loads tasks from disk and returns them as a list.
+     * <p>
+     * If the save file does not exist, returns an empty list.
+     * @return A list of loaded tasks. Empty list if no save file is found.
+     * @throws SparkException If an {@link IOException} occurs while reading the file,
+     * or if any line in the file is corrupted.
+     */
     public List<Task> load() throws SparkException {
         if (!Files.exists(filePath)) {
             return new ArrayList<>();
