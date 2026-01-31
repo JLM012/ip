@@ -12,6 +12,12 @@ public class TaskList {
         this.tasks = new ArrayList<>(initialTasks);
     }
 
+    private void checkIndex(int index) throws SparkException {
+        if (index < 0 || index >= tasks.size()) {
+            throw new SparkException("Task number must be between 1 and " + tasks.size() + ".");
+        }
+    }
+
     public void addTask(Task task) {
         tasks.add(task);
     }
@@ -24,17 +30,20 @@ public class TaskList {
         return tasks.get(index);
     }
 
-    public Task mark(int index) {
+    public Task mark(int index) throws SparkException {
+        checkIndex(index);
         tasks.get(index).markAsDone();
         return tasks.get(index);
     }
 
-    public Task unmark(int index) {
+    public Task unmark(int index) throws SparkException {
+        checkIndex(index);
         tasks.get(index).markAsNotDone();
         return tasks.get(index);
     }
 
-    public Task deleteTask(int index) {
+    public Task deleteTask(int index) throws SparkException {
+        checkIndex(index);
         Task removed = tasks.remove(index);
         return removed;
     }
