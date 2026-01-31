@@ -122,6 +122,10 @@ public class Spark {
             ui.showDeleted(deleted, totalTasks);
             storage.save(tasks);
 
+        } else if (command.equals("find")) {
+            String keyword = Parser.parseFind(rest);
+            ui.showFind(tasks.find(keyword));
+
         } else {
             throw new SparkException("The input you provided is invalid");
         }

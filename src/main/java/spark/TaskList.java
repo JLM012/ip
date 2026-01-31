@@ -83,4 +83,23 @@ public class TaskList {
         return removed;
     }
 
+    /**
+     * Finds all matches with the given keyword.
+     * @param keyword The keyword to match with
+     * @return A list of tasks that match with the keyword
+     */
+    public List<Task> find(String keyword) {
+        List<Task> matches = new ArrayList<>();
+        String key = keyword.toLowerCase();
+
+        for (Task t : tasks) {
+            String description = t.getDescription();
+            if (description.toLowerCase().contains(key)) {
+                matches.add(t);
+            }
+        }
+
+        return matches;
+    }
+
 }

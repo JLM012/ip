@@ -110,5 +110,20 @@ public class Parser {
         return new Event(description, from, to);
     }
 
+    /**
+     * Parses an {@code find} command argument into a String {@code keyword}.
+     * @param rest The keyword from the command
+     * @return A string {@code keyword}
+     * @throws SparkException If the keyword is missing
+     */
+    public static String parseFind(String rest) throws SparkException {
+        String keyword = rest.trim();
+        if (keyword.isEmpty()) {
+            throw new SparkException("Find format: find <keyword>");
+        }
+        return keyword;
+    }
+
+
 
 }
