@@ -9,7 +9,7 @@ public class Event extends Task {
     }
 
     @Override
-    public String toFileString() {
+    public String toSaveString() {
         int done = isDone ? 1 : 0;
         return "E | " + done + " | " + description + " | " + from + " | " +to;
     }

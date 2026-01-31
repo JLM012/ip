@@ -5,7 +5,7 @@ public class Todo extends Task {
     }
 
     @Override
-    public String toFileString() {
+    public String toSaveString() {
         int done = isDone ? 1 : 0;
         return "T | " + done + " | " + description;
     }

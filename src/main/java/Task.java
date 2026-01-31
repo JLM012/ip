@@ -19,7 +19,7 @@ public class Task {
         this.isDone = false;
     }
 
-    public String toFileString() {
+    public String toSaveString() {
         int done = isDone ? 1 : 0;
         return "T | " + done + " | " + description;
     }
