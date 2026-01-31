@@ -26,6 +26,14 @@ public class Task {
         return "T | " + done + " | " + description;
     }
 
+    public boolean getIsDone() {
+        return this.isDone;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
     @Override
     public String toString() {
         return "[" + this.getStatusIcon() + "] " + this.description;
