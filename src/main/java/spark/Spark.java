@@ -3,7 +3,9 @@ package spark;
 import java.nio.file.Paths;
 import java.util.List;
 
-//Entry point of the chatbot.
+/**
+ * Main chatbot class that controls the UI, Task list and Storage.
+ */
 public class Spark {
     private Ui ui = new Ui();
     private TaskList tasks;
@@ -11,7 +13,13 @@ public class Spark {
     private boolean didLoadFail = false;
     private String loadFailedMessage = "";
 
-
+    /**
+     * Constructs a Spark chatbot instance.
+     * <p>
+     * Loads tasks from disk via {@link Storage#load()}.
+     * If loading fails, initializes an empty {@link TaskList} and stores a warning message
+     * to be shown when the chatbot starts.
+     */
     public Spark() {
         try {
             List<Task> loadedTasks = storage.load();
@@ -23,6 +31,12 @@ public class Spark {
         }
     }
 
+    /**
+     * Starts the main chatbot interaction loop.
+     * <p>
+     * Prints the welcome message, show warning if loading failed,
+     * then repeatedly reads user input and executes commands until {@code bye} is entered
+     */
     public void start() {
         ui.showWelcome();
 
@@ -31,11 +45,6 @@ public class Spark {
                     " reverting to empty list \nReason: " + loadFailedMessage);
         }
 
-        // reads user input and adds to tasklist.
-        // command "list" displays the current list.
-        // command "mark" or "unmark" marks/unmark task at specified index
-        // Tasks can be added using command "todo", "by", "event"
-        // command "bye" exits the chatbot
         while (true) {
             String input = ui.readCommand();
 
@@ -51,10 +60,20 @@ public class Spark {
         }
     }
 
+    /**
+     * Main entry point
+     * @param args (not used)
+     */
     public static void main(String[] args) {
         new Spark().start();
     }
 
+    /**
+     * Executes a single user command.
+     *
+     * @param input The raw user input line
+     * @throws SparkException If the command is invalid or required arguments are missing/incorrect.
+     */
     private void handleInput(String input) throws SparkException {
         String[] parsedInput = Parser.parse(input);
         String command = parsedInput[0];

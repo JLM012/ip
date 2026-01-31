@@ -4,8 +4,18 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Parses raw user input into their different components.
+ */
 public class Parser {
 
+    /**
+     * Splits a raw input line into a command word and the remaining arguments.
+     * @param input The raw user input line.
+     * @return A two-element array containing {@code [command, rest]}, where {@code rest} is
+     * the remaining input after the command
+     * @throws SparkException If the input is empty
+     */
     public static String[] parse(String input) throws SparkException {
         if (input.trim().isEmpty()) throw new SparkException("Please type a command.");
 
@@ -15,6 +25,13 @@ public class Parser {
         return new String[] { command, rest };
     }
 
+    /**
+     * Parses a 1-based index from a command argument string and converts it to 0-based.
+     * @param rest The argument string that contains the index.
+     * @param formatMessage The error message to use if parsing fails.
+     * @return The parsed index in 0-based form.
+     * @throws SparkException If {@code rest} is empty or does not contain a valid integer index.
+     */
     public static int parseIndex(String rest, String formatMessage) throws SparkException {
         if (rest.isEmpty()) throw new SparkException(formatMessage);
         try {
@@ -24,7 +41,12 @@ public class Parser {
         }
     }
 
-
+    /**
+     * Parses a {@code todo} command argument into a {@link Todo} task
+     * @param rest The description portion of the todo command.
+     * @return A {@link Todo} task created with the provided description.
+     * @throws SparkException If the description is missing.
+     */
     public static Todo parseTodo(String rest) throws SparkException {
         if (rest.isEmpty()) {
             throw new SparkException("Todo format: todo <description>");
@@ -32,6 +54,12 @@ public class Parser {
         return new Todo(rest);
     }
 
+    /**
+     * Parses a {@code deadline} command argument into a {@link Deadline} task.
+     * @param rest The arguments following the {@code deadline} command word.
+     * @return A {@link Deadline} task created from the parsed description and date/time.
+     * @throws SparkException If the format is invalid or required parts are missing
+     */
     public static Deadline parseDeadline(String rest) throws SparkException {
         String[] deadlineArgs = rest.split("\\s*/by\\s*", 2);
         if (deadlineArgs.length < 2) {
@@ -54,6 +82,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses an {@code event} command argument into an {@link Event} task.
+     * @param rest The arguments following the {@code event} command word.
+     * @return A {@link Deadline} task created from the parsed description, from and to strings.
+     * @throws SparkException If the format is invalid or required parts are missing
+     */
     public static Event parseEvent(String rest) throws SparkException {
         String[] eventArgs = rest.split("\\s*/from\\s*", 2);
         if (eventArgs.length < 2) {
