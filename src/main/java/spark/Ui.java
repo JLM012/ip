@@ -1,3 +1,5 @@
+package spark;
+
 import java.util.Scanner;
 
 //Responsible for reading user input and printing responses.

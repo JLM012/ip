@@ -1,3 +1,5 @@
+package spark;
+
 public class SparkException extends Exception {
 
     public SparkException(String message) {
