@@ -11,7 +11,7 @@ public class ParserTest {
         Deadline d = Parser.parseDeadline("return book /by 2025-01-25 1200");
 
         assertEquals("return book", d.getDescription(), "Description should be parsed correctly.");
-        assertFalse(d.getIsDone(), "New tasks should be not done by default.");
+        assertFalse(d.isDone(), "New tasks should be not done by default.");
     }
 
     @Test

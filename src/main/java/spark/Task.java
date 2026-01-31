@@ -26,7 +26,7 @@ public class Task {
         return "T | " + done + " | " + description;
     }
 
-    public boolean getIsDone() {
+    public boolean isDone() {
         return this.isDone;
     }
 

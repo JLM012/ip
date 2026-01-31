@@ -11,7 +11,7 @@ public class TaskListTest {
         list.addTask(new Todo("buy groceries"));
 
         Task t = list.mark(0);
-        assertTrue(t.getIsDone(), "Task should be marked done.");
+        assertTrue(t.isDone(), "Task should be marked done.");
         assertEquals("buy groceries", t.getDescription(),
                 "Description should match the task added.");
     }
