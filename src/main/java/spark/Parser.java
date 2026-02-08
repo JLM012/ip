@@ -85,7 +85,7 @@ public class Parser {
     /**
      * Parses an {@code event} command argument into an {@link Event} task.
      * @param rest The arguments following the {@code event} command word.
-     * @return A {@link Deadline} task created from the parsed description, from and to strings.
+     * @return A {@link Event} task created from the parsed description, from and to strings.
      * @throws SparkException If the format is invalid or required parts are missing
      */
     public static Event parseEvent(String rest) throws SparkException {
@@ -100,14 +100,14 @@ public class Parser {
             throw new SparkException("Event format: event <desc> /from <start> /to <end>");
         }
 
-        String from = fromTo[0].trim();
-        String to = fromTo[1].trim();
+        String fromTime = fromTo[0].trim();
+        String toTime = fromTo[1].trim();
 
-        if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+        if (description.isEmpty() || fromTime.isEmpty() || toTime.isEmpty()) {
             throw new SparkException("Event format: event <desc> /from <start> /to <end>");
         }
 
-        return new Event(description, from, to);
+        return new Event(description, fromTime, toTime);
     }
 
     /**

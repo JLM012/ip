@@ -78,8 +78,8 @@ public class Storage {
                 if (line.isEmpty()) {
                     continue;
                 }
-                Task t = parseLine(line);
-                loadedTasks.add(t);
+                Task task = parseLine(line);
+                loadedTasks.add(task);
             }
 
             return loadedTasks;
@@ -103,7 +103,7 @@ public class Storage {
         }
 
         String taskType = parts[0];
-        String doneFlag = parts[1];
+        String doneStatus = parts[1];
         String description = parts[2];
 
         Task task;
@@ -132,7 +132,7 @@ public class Storage {
             throw new SparkException("Unknown task type in save data: " + taskType);
         }
 
-        if (doneFlag.equals("1")) {
+        if (doneStatus.equals("1")) {
             task.markAsDone();
         } else {
             task.markAsNotDone();
