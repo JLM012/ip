@@ -43,7 +43,7 @@ test {
 }
 
 application {
-    mainClass.set("spark.Spark")
+    mainClass.set("spark.Launcher")
 }
 
 shadowJar {
