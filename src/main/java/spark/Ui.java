@@ -9,14 +9,30 @@ import java.util.Scanner;
 public class Ui {
     private Scanner scanner = new Scanner(System.in);
 
+    private static final String SEPARATOR =
+            "_______________________________________________________";
+    private static final String LS = System.lineSeparator();
+
+    private String box(String... lines) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(SEPARATOR).append(LS);
+        for (String line : lines) {
+            sb.append(line).append(LS);
+        }
+        sb.append(SEPARATOR);
+        return sb.toString();
+    }
+
+
     /**
      * Prints the welcome message shown when the chatbot starts.
      */
     public void showWelcome() {
-        printSeparator();
-        System.out.println("Hello! I'm Spark!");
-        System.out.println("How can i help you today?");
-        printSeparator();
+        System.out.println(getWelcomeMessage());
+    }
+
+    public String getWelcomeMessage() {
+        return box("Hello! I'm Spark!", "How can i help you today?");
     }
 
     /**
@@ -25,11 +41,15 @@ public class Ui {
      * @param totalTasks The total number of tasks after the addition.
      */
     public void showAdded(Task task, int totalTasks) {
-        printSeparator();
-        System.out.println("Done. I've added this task:" );
-        System.out.println("   " + task);
-        System.out.println("Now you have " + totalTasks + " tasks in the list" );
-        printSeparator();
+        System.out.println(getAddedMessage(task, totalTasks));
+    }
+
+    public String getAddedMessage(Task task, int totalTasks) {
+        return box(
+                "Done. I've added this task:",
+                "   " + task,
+                "Now you have " + totalTasks + " tasks in the list"
+        );
     }
 
     /**
@@ -37,21 +57,30 @@ public class Ui {
      * @param tasks The {@link TaskList} containing tasks to print.
      */
     public void showList(TaskList tasks) {
-        printSeparator();
-        System.out.println("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.getSize(); i++) {
-            System.out.println((i + 1) + ". " + tasks.getTask(i));
-        }
-        printSeparator();
+        System.out.println(getListMessage(tasks));
     }
+
+    public String getListMessage(TaskList tasks) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(SEPARATOR).append(LS);
+        sb.append("Here are the tasks in your list:").append(LS);
+        for (int i = 0; i < tasks.getSize(); i++) {
+            sb.append((i + 1)).append(". ").append(tasks.getTask(i)).append(LS);
+        }
+        sb.append(SEPARATOR);
+        return sb.toString();
+    }
+
 
     /**
      * Prints the goodbye message when the user exits the chatbot.
      */
     public void showBye() {
-        printSeparator();
-        System.out.println("It was a pleasure assisting you! Goodbye!");
-        printSeparator();
+        System.out.println(getByeMessage());
+    }
+
+    public String getByeMessage() {
+        return box("It was a pleasure assisting you! Goodbye!");
     }
 
     /**
@@ -59,10 +88,11 @@ public class Ui {
      * @param task The task that was marked as done
      */
     public void showMark(Task task) {
-        printSeparator();
-        System.out.println("Nice! I've marked this task as done:");
-        System.out.println("   " + task);
-        printSeparator();
+        System.out.println(getMarkMessage(task));
+    }
+
+    public String getMarkMessage(Task task) {
+        return box("Nice! I've marked this task as done:", "   " + task);
     }
 
     /**
@@ -70,10 +100,11 @@ public class Ui {
      * @param task The task that was marked as not done
      */
     public void showUnmark(Task task) {
-        printSeparator();
-        System.out.println("OK, I've marked this task as not done yet:");
-        System.out.println("   " + task);
-        printSeparator();
+        System.out.println(getUnmarkMessage(task));
+    }
+
+    public String getUnmarkMessage(Task task) {
+        return box("OK, I've marked this task as not done yet:", "   " + task);
     }
 
     /**
@@ -81,9 +112,11 @@ public class Ui {
      * @param message message to be printed
      */
     public void showError(String message) {
-        printSeparator();
-        System.out.println(message);
-        printSeparator();
+        System.out.println(getErrorMessage(message));
+    }
+
+    public String getErrorMessage(String message) {
+        return box(message);
     }
 
     /**
@@ -92,11 +125,15 @@ public class Ui {
      * @param totalTasks The total number of tasks after deletion.
      */
     public void showDeleted(Task task, int totalTasks) {
-        printSeparator();
-        System.out.println("Done. I've deleted this task:" );
-        System.out.println("   " + task);
-        System.out.println("Now you have " + totalTasks + " tasks in the list" );
-        printSeparator();
+        System.out.println(getDeletedMessage(task, totalTasks));
+    }
+
+    public String getDeletedMessage(Task task, int totalTasks) {
+        return box(
+                "Done. I've deleted this task:",
+                "   " + task,
+                "Now you have " + totalTasks + " tasks in the list"
+        );
     }
 
     /**
@@ -104,23 +141,31 @@ public class Ui {
      * @param matches List of tasks containing the keyword
      */
     public void showFind(List<Task> matches) {
-        printSeparator();
+        System.out.println(getFindMessage(matches));
+    }
+
+    public String getFindMessage(List<Task> matches) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(SEPARATOR).append(LS);
+
         if (matches.isEmpty()) {
-            System.out.println("No matching tasks found.");
+            sb.append("No matching tasks found.").append(LS);
         } else {
-            System.out.println("Here are the matching tasks in your list:");
+            sb.append("Here are the matching tasks in your list:").append(LS);
             for (int i = 0; i < matches.size(); i++) {
-                System.out.println((i + 1) + ". " + matches.get(i));
+                sb.append((i + 1)).append(". ").append(matches.get(i)).append(LS);
             }
         }
-        printSeparator();
+
+        sb.append(SEPARATOR);
+        return sb.toString();
     }
 
     /**
      * Prints a horizontal separator line
      */
     public void printSeparator() {
-        System.out.println("____________________________________________________________");
+        System.out.println(SEPARATOR);
     }
 
     /**

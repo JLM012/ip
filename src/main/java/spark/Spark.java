@@ -12,6 +12,12 @@ public class Spark {
     private final Storage storage = new Storage(Paths.get("data", "spark.txt"));
     private boolean didLoadFail = false;
     private String loadFailedMessage = "";
+    private boolean isExit = false;
+
+
+    public boolean isExit() {
+        return isExit;
+    }
 
     /**
      * Constructs a Spark chatbot instance.
@@ -28,6 +34,83 @@ public class Spark {
             this.tasks = new TaskList();
             didLoadFail = true;
             loadFailedMessage = e.getMessage();
+        }
+    }
+
+    public String getResponse(String input) {
+        isExit = false;
+
+        if (input == null || input.trim().isEmpty()) {
+            return "";
+        }
+
+        String trimmed = input.trim();
+
+        try {
+            String[] parsedInput = Parser.parse(trimmed);
+            String command = parsedInput[0];
+            String rest = parsedInput[1];
+
+            switch (command) {
+            case "bye":
+                isExit = true;
+                return ui.getByeMessage(); // you'll implement this
+
+            case "list":
+                return ui.getListMessage(tasks);
+
+            case "mark": {
+                int index = Parser.parseIndex(rest, "Mark format: mark <taskNumber>");
+                Task marked = tasks.mark(index);
+                storage.save(tasks);
+                return ui.getMarkMessage(marked);
+            }
+
+            case "unmark": {
+                int index = Parser.parseIndex(rest, "Unmark format: unmark <taskNumber>");
+                Task unmarked = tasks.unmark(index);
+                storage.save(tasks);
+                return ui.getUnmarkMessage(unmarked);
+            }
+
+            case "todo": {
+                Task todo = Parser.parseTodo(rest);
+                tasks.addTask(todo);
+                storage.save(tasks);
+                return ui.getAddedMessage(todo, tasks.getSize());
+            }
+
+            case "deadline": {
+                Task deadline = Parser.parseDeadline(rest);
+                tasks.addTask(deadline);
+                storage.save(tasks);
+                return ui.getAddedMessage(deadline, tasks.getSize());
+            }
+
+            case "event": {
+                Task event = Parser.parseEvent(rest);
+                tasks.addTask(event);
+                storage.save(tasks);
+                return ui.getAddedMessage(event, tasks.getSize());
+            }
+
+            case "delete": {
+                int index = Parser.parseIndex(rest, "Delete format: delete <taskNumber>");
+                Task deleted = tasks.deleteTask(index);
+                storage.save(tasks);
+                return ui.getDeletedMessage(deleted, tasks.getSize());
+            }
+
+            case "find": {
+                String keyword = Parser.parseFind(rest);
+                return ui.getFindMessage(tasks.find(keyword));
+            }
+
+            default:
+                throw new SparkException("The input you provided is invalid");
+            }
+        } catch (SparkException e) {
+            return ui.getErrorMessage(e.getMessage());
         }
     }
 
