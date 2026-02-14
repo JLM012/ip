@@ -162,56 +162,69 @@ public class Spark {
         String command = parsedInput[0];
         String rest = parsedInput[1];
 
-        if (command.equals("list")) {
+        switch (command) {
+        case "list":
             ui.showList(tasks);
+            return;
 
-        } else if (command.equals("mark")) {
-            int index = Parser.parseIndex(rest, "Mark format: mark <taskNumber>");
-            Task marked = tasks.mark(index);
-            ui.showMark(marked);
-            storage.save(tasks);
+        case "mark":
+            markTask(rest);
+            return;
 
-        } else if (command.equals("unmark")) {
-            int index = Parser.parseIndex(rest, "Unmark format: unmark <taskNumber>");
-            Task unmarked = tasks.unmark(index);
-            ui.showUnmark(unmarked);
-            storage.save(tasks);
+        case "unmark":
+            unmarkTask(rest);
+            return;
 
-        } else if (command.equals("todo")) {
-            Task todo = Parser.parseTodo(rest);
-            tasks.addTask(todo);
-            int totalTasks = tasks.getSize();
-            ui.showAdded(todo, totalTasks);
-            storage.save(tasks);
+        case "delete":
+            deleteTask(rest);
+            return;
 
-        } else if (command.equals("deadline")) {
-            Task deadline = Parser.parseDeadline(rest);
-            tasks.addTask(deadline);
-            int totalTasks = tasks.getSize();
-            ui.showAdded(deadline, totalTasks);
-            storage.save(tasks);
+        case "todo":
+            addTask(Parser.parseTodo(rest));
+            return;
 
-        } else if (command.equals("event")) {
-            Task event = Parser.parseEvent(rest);
-            tasks.addTask(event);
-            int totalTasks = tasks.getSize();
-            ui.showAdded(event, totalTasks);
-            storage.save(tasks);
+        case "deadline":
+            addTask(Parser.parseDeadline(rest));
+            return;
 
-        } else if (command.equals("delete")) {
-            int index = Parser.parseIndex(rest, "Delete format: delete <taskNumber>");
-            Task deleted = tasks.deleteTask(index);
-            int totalTasks = tasks.getSize();
-            ui.showDeleted(deleted, totalTasks);
-            storage.save(tasks);
+        case "event":
+            addTask(Parser.parseEvent(rest));
+            return;
 
-        } else if (command.equals("find")) {
-            String keyword = Parser.parseFind(rest);
-            ui.showFind(tasks.find(keyword));
+        case "find":
+            ui.showFind(tasks.find(Parser.parseFind(rest)));
+            return;
 
-        } else {
+        default:
             throw new SparkException("The input you provided is invalid");
         }
 
+    }
+
+    private void addTask(Task task) throws SparkException {
+        tasks.addTask(task);
+        ui.showAdded(task, tasks.getSize());
+        storage.save(tasks);
+    }
+
+    private void markTask(String rest) throws SparkException {
+        int index = Parser.parseIndex(rest, "Mark format: mark <taskNumber>");
+        Task marked = tasks.mark(index);
+        ui.showMark(marked);
+        storage.save(tasks);
+    }
+
+    private void unmarkTask(String rest) throws SparkException {
+        int index = Parser.parseIndex(rest, "Unmark format: unmark <taskNumber>");
+        Task unmarked = tasks.unmark(index);
+        ui.showUnmark(unmarked);
+        storage.save(tasks);
+    }
+
+    private void deleteTask(String rest) throws SparkException {
+        int index = Parser.parseIndex(rest, "Delete format: delete <taskNumber>");
+        Task deleted = tasks.deleteTask(index);
+        ui.showDeleted(deleted, tasks.getSize());
+        storage.save(tasks);
     }
 }
