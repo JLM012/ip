@@ -25,6 +25,8 @@ import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
  */
 public class Storage {
     private Path filePath;
+    private static final DateTimeFormatter DEADLINE_FORMAT =
+            DateTimeFormatter.ofPattern("MMM d yyyy, h:mma");
 
     /**
      * Creates a {@code Storage} that reads/writes tasks at the given file path.
@@ -116,8 +118,7 @@ public class Storage {
             if (parts.length < 4) {
                 throw new SparkException("Deadline task data was corrupted");
             }
-            DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("MMM d yyyy, h:mma");
-            LocalDateTime deadlineDateTime = LocalDateTime.parse(parts[3], deadlineFormat);
+            LocalDateTime deadlineDateTime = LocalDateTime.parse(parts[3], DEADLINE_FORMAT);
             task = new Deadline(description, deadlineDateTime);
             break;
 
