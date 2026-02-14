@@ -20,6 +20,9 @@ public class Parser {
         if (input.trim().isEmpty()) throw new SparkException("Please type a command.");
 
         String[] inputSections = input.trim().split(" ", 2);
+        assert inputSections.length >= 1 : "split should produce at least one token";
+        assert !inputSections[0].isEmpty() : "command word should not be empty";
+
         String command = inputSections[0];
         String rest = (inputSections.length == 2) ? inputSections[1].trim() : "";
         return new String[] { command, rest };

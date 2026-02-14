@@ -25,6 +25,9 @@ public class TaskList {
     }
 
     private void checkIndex(int index) throws SparkException {
+        assert tasks != null : "tasks list should be initialized";
+        assert tasks.size() >= 0 : "tasks size should not be negative";
+
         if (index < 0 || index >= tasks.size()) {
             throw new SparkException("Task number must be between 1 and " + tasks.size() + ".");
         }
