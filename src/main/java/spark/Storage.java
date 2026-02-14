@@ -90,6 +90,7 @@ public class Storage {
     }
 
     private void ensureDataFolderExists() throws IOException {
+        assert filePath != null : "filePath should be set";
         Path data = filePath.getParent();
         if (!Files.exists(data)) {
             Files.createDirectories(data);
