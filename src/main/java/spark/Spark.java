@@ -54,7 +54,7 @@ public class Spark {
             switch (command) {
             case "bye":
                 isExit = true;
-                return ui.getByeMessage(); // you'll implement this
+                return ui.getByeMessage();
 
             case "list":
                 return ui.getListMessage(tasks);
@@ -104,6 +104,12 @@ public class Spark {
             case "find": {
                 String keyword = Parser.parseFind(rest);
                 return ui.getFindMessage(tasks.find(keyword));
+            }
+
+            case "sort": {
+                tasks.sortByDateTime();
+                storage.save(tasks);
+                return "Sorted tasks.\n" + ui.getListMessage(tasks);
             }
 
             default:
