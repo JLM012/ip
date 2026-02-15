@@ -1,5 +1,7 @@
 package spark;
 
+import java.time.LocalDateTime;
+
 /**
  * Represents a basic task with a description and a completion status.
  */
@@ -65,5 +67,9 @@ public class Task {
     @Override
     public String toString() {
         return "[" + this.getStatusIcon() + "] " + this.description;
+    }
+
+    public LocalDateTime getDateTime() {
+        return null;
     }
 }

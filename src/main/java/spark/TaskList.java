@@ -2,6 +2,8 @@ package spark;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Comparator;
 
 /**
  * Represents a list of {@link Task} objects.
@@ -104,5 +106,13 @@ public class TaskList {
 
         return matches;
     }
+
+    public void sortByDateTime() {
+        tasks.sort(Comparator.comparing(
+                Task::getDateTime,
+                Comparator.nullsLast(Comparator.naturalOrder())
+        ));
+    }
+
 
 }
