@@ -9,6 +9,12 @@ import java.time.format.DateTimeParseException;
  */
 public class Parser {
 
+    //Copilot suggested to move the format messages here to avoid duplication in the command classes
+    private static final String DEADLINE_FORMAT_MSG = "Deadline format: deadline <desc> /by <yyyy-MM-dd HHmm>";
+    private static final String EVENT_FORMAT_MSG = "Event format: event <desc> /from <start> /to <end>";
+    private static final String TODO_FORMAT_MSG = "Todo format: todo <description>";
+    private static final String FIND_FORMAT_MSG = "Find format: find <keyword>";
+
     /**
      * Splits a raw input line into a command word and the remaining arguments.
      * @param input The raw user input line.
@@ -52,7 +58,7 @@ public class Parser {
      */
     public static Todo parseTodo(String rest) throws SparkException {
         if (rest.isEmpty()) {
-            throw new SparkException("Todo format: todo <description>");
+            throw new SparkException(TODO_FORMAT_MSG);
         }
         return new Todo(rest);
     }
@@ -66,13 +72,13 @@ public class Parser {
     public static Deadline parseDeadline(String rest) throws SparkException {
         String[] deadlineArgs = rest.split("\\s*/by\\s*", 2);
         if (deadlineArgs.length < 2) {
-            throw new SparkException("Deadline format: deadline <desc> /by <yyyy-MM-dd HHmm>");
+            throw new SparkException(DEADLINE_FORMAT_MSG);
         }
 
         String description = deadlineArgs[0].trim();
         String byString = deadlineArgs[1].trim();
         if (description.isEmpty() || byString.isEmpty()) {
-            throw new SparkException("Deadline format: deadline <desc> /by <yyyy-MM-dd HHmm>");
+            throw new SparkException(DEADLINE_FORMAT_MSG);
         }
 
         try {
@@ -94,20 +100,20 @@ public class Parser {
     public static Event parseEvent(String rest) throws SparkException {
         String[] eventArgs = rest.split("\\s*/from\\s*", 2);
         if (eventArgs.length < 2) {
-            throw new SparkException("Event format: event <desc> /from <start> /to <end>");
+            throw new SparkException(EVENT_FORMAT_MSG);
         }
         String description = eventArgs[0].trim();
         String[] fromTo = eventArgs[1].trim().split("\\s*/to\\s*", 2);
 
         if (fromTo.length < 2) {
-            throw new SparkException("Event format: event <desc> /from <start> /to <end>");
+            throw new SparkException(EVENT_FORMAT_MSG);
         }
 
         String fromTime = fromTo[0].trim();
         String toTime = fromTo[1].trim();
 
         if (description.isEmpty() || fromTime.isEmpty() || toTime.isEmpty()) {
-            throw new SparkException("Event format: event <desc> /from <start> /to <end>");
+            throw new SparkException(EVENT_FORMAT_MSG);
         }
 
         return new Event(description, fromTime, toTime);
@@ -122,7 +128,7 @@ public class Parser {
     public static String parseFind(String rest) throws SparkException {
         String keyword = rest.trim();
         if (keyword.isEmpty()) {
-            throw new SparkException("Find format: find <keyword>");
+            throw new SparkException(FIND_FORMAT_MSG);
         }
         return keyword;
     }
