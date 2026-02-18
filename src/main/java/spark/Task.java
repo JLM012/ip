@@ -19,6 +19,11 @@ public class Task {
         this.isDone = false;
     }
 
+    /**
+     * Returns the status icon for this task.
+     *
+     * @return {@code "X"} if the task is done, otherwise {@code " "} (a space).
+     */
     public String getStatusIcon() {
         return (isDone ? "X" : " "); //mark done task with an X
     }
@@ -37,6 +42,7 @@ public class Task {
         this.isDone = false;
     }
 
+
     /**
      * Changes this task into a standard string for saving to storage.
      * <p>
@@ -49,6 +55,12 @@ public class Task {
         return "T | " + done + " | " + description;
     }
 
+
+    /**
+     * Checks if this task is marked as done.
+     *
+     * @return {@code true} if the task is done, otherwise {@code false}.
+     */
     public boolean isDone() {
         return this.isDone;
     }
@@ -56,6 +68,7 @@ public class Task {
     public String getDescription() {
         return this.description;
     }
+
 
     /**
      * Returns the user-facing string representation of this task.
@@ -69,6 +82,12 @@ public class Task {
         return "[" + this.getStatusIcon() + "] " + this.description;
     }
 
+
+    /**
+     * Returns the date/time associated with this task.
+     *
+     * @return {@code null} for basic tasks. Subclasses may override to return a {@link LocalDateTime}.
+     */
     public LocalDateTime getDateTime() {
         return null;
     }

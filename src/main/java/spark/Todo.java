@@ -2,6 +2,11 @@ package spark;
 
 public class Todo extends Task {
 
+    /**
+     * Constructs a new todo task with the given description.
+     *
+     * @param description The description of the todo task.
+     */
     public Todo(String description) {
         super(description);
     }

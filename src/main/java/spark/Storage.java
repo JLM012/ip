@@ -91,6 +91,11 @@ public class Storage {
         }
     }
 
+    /**
+     * Ensures that the data folder exists, creating it if necessary.
+     *
+     * @throws IOException If the folder cannot be created.
+     */
     private void ensureDataFolderExists() throws IOException {
         assert filePath != null : "filePath should be set";
         Path data = filePath.getParent();
@@ -99,6 +104,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Parses a single line from the save file and converts it into a {@link Task}.
+     *
+     * @param line A line from the save file in the format {@code "<taskType> | <done> | <data>"}.
+     * @return The parsed {@link Task} object.
+     * @throws SparkException If the line format is corrupted or invalid.
+     */
     private Task parseLine(String line) throws SparkException {
         String[] parts = line.split(" \\| ");
         if (parts.length < 3) {

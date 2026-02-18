@@ -15,6 +15,11 @@ public class Spark {
     private boolean isExit = false;
 
 
+    /**
+     * Checks if the chatbot should exit.
+     *
+     * @return {@code true} if the user has entered the {@code bye} command, otherwise {@code false}.
+     */
     public boolean isExit() {
         return isExit;
     }
@@ -207,12 +212,24 @@ public class Spark {
 
     }
 
+    /**
+     * Adds a task to the task list and saves it to disk.
+     *
+     * @param task The task to be added.
+     * @throws SparkException If saving to disk fails.
+     */
     private void addTask(Task task) throws SparkException {
         tasks.addTask(task);
         ui.showAdded(task, tasks.getSize());
         storage.save(tasks);
     }
 
+    /**
+     * Marks a task as done based on the provided index and saves it to disk.
+     *
+     * @param rest The argument string containing the task index.
+     * @throws SparkException If the index is invalid or saving fails.
+     */
     private void markTask(String rest) throws SparkException {
         int index = Parser.parseIndex(rest, "Mark format: mark <taskNumber>");
         Task marked = tasks.mark(index);
@@ -220,6 +237,13 @@ public class Spark {
         storage.save(tasks);
     }
 
+
+    /**
+     * Marks a task as not done based on the provided index and saves it to disk.
+     *
+     * @param rest The argument string containing the task index.
+     * @throws SparkException If the index is invalid or saving fails.
+     */
     private void unmarkTask(String rest) throws SparkException {
         int index = Parser.parseIndex(rest, "Unmark format: unmark <taskNumber>");
         Task unmarked = tasks.unmark(index);
@@ -227,6 +251,13 @@ public class Spark {
         storage.save(tasks);
     }
 
+
+    /**
+     * Deletes a task based on the provided index and saves changes to disk.
+     *
+     * @param rest The argument string containing the task index.
+     * @throws SparkException If the index is invalid or saving fails.
+     */
     private void deleteTask(String rest) throws SparkException {
         int index = Parser.parseIndex(rest, "Delete format: delete <taskNumber>");
         Task deleted = tasks.deleteTask(index);

@@ -43,10 +43,23 @@ public class TaskList {
         tasks.add(task);
     }
 
+
+    /**
+     * Returns the number of tasks in this task list.
+     *
+     * @return The size of the task list.
+     */
     public int getSize() {
         return tasks.size();
     }
 
+
+    /**
+     * Returns the task at the given index.
+     *
+     * @param index The 0-based index of the task.
+     * @return The task at the specified index.
+     */
     public Task getTask(int index) {
         return tasks.get(index);
     }
@@ -107,6 +120,11 @@ public class TaskList {
         return matches;
     }
 
+    /**
+     * Sorts the tasks in the list by date/time.
+     * <p>
+     * Tasks without a date/time are placed at the end of the list.
+     */
     public void sortByDateTime() {
         tasks.sort(Comparator.comparing(
                 Task::getDateTime,
