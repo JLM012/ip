@@ -212,6 +212,21 @@ sort
 After sorting, run `list` to view the tasks in the new order.
 
 ---
+
+
+### Exiting
+
+Exits the chatbot
+
+**Format:** `bye`
+
+Example:
+```
+bye
+```
+
+---
+
 ## Saving and loading
 
 Spark automatically saves tasks after commands that change the list (add, mark, unmark, delete).
