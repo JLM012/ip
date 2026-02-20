@@ -10,34 +10,20 @@ It supports a simple GUI where you type commands and Spark replies in the chat w
 
 ## Command summary
 
-| Command | Format |
-|---|---|
-| List tasks | `list` |
-| Add todo | `todo <description>` |
+| Command      | Format                                         |
+|--------------|------------------------------------------------|
+| Add todo     | `todo <description>`                           |
 | Add deadline | `deadline <description> /by <yyyy-MM-dd HHmm>` |
-| Add event | `event <description> /from <start> /to <end>` |
-| Mark task | `mark <taskNumber>` |
-| Unmark task | `unmark <taskNumber>` |
-| Delete task | `delete <taskNumber>` |
-| Find tasks | `find <keyword>` |
-| Exit | `bye` |
+| Add event    | `event <description> /from <start> /to <end>`  |
+| Mark task    | `mark <taskNumber>`                            |
+| Unmark task  | `unmark <taskNumber>`                          |
+| List tasks   | `list`                                         |
+| Delete task  | `delete <taskNumber>`                          |
+| Find tasks   | `find <keyword>`                               |
+| Sort tasks   | `sort`                                         |
+| Exit         | `bye`                                          |
 
----
 
-
-## Listing tasks
-
-Shows all tasks currently stored.
-
-Format: `list`
-
-Example:
-`list`
-
-Expected outcome:
-- Spark prints all tasks with indices.
-
----
 ## Adding a todo
 
 Adds a todo task.
@@ -45,10 +31,18 @@ Adds a todo task.
 Format: `todo <description>`
 
 Example:
-`todo read book`
+```
+todo buy groceries
+```
 
-Expected outcome:
-- A todo is added to the list and shown in the response.
+Output:
+```
+_______________________________________________________
+Done. I've added this task:
+   [T][ ] buy groceries
+Now you have 1 tasks in the list.
+_______________________________________________________
+```
 
 ---
 
@@ -60,11 +54,18 @@ Format:
 `deadline <description> /by <yyyy-MM-dd HHmm>`
 
 Example:
-`deadline return book /by 2025-01-25 1200`
+```
+deadline return book /by 2025-01-25 1200
+```
 
-Expected outcome:
-- A deadline task is added.
-- Spark displays the deadline in a friendlier format (example: `Jan 25 2025, 12:00PM`).
+Output:
+```
+_______________________________________________________
+Done. I've added this task:
+   [D][ ] return book (by: Jan 25 2025, 12:00PM)
+Now you have 2 tasks in the list.
+_______________________________________________________
+```
 
 ---
 ## Adding an event
@@ -75,73 +76,142 @@ Format:
 `event <description> /from <start> /to <end>`
 
 Example:
-`event project meeting /from Mon 2pm /to Mon 4pm`
+```
+event project meeting /from 2pm /to 4pm
+```
 
-Expected outcome:
-- An event is added with its from-to timing.
-
+Output:
+```
+_______________________________________________________
+Done. I've added this task:
+   [E][ ] project meeting (from: 2pm to: 4pm)
+Now you have 3 tasks in the list.
+_______________________________________________________
+```
 ---
 
 ## Marking a task as done
 
 Marks a task as completed.
+Task becomes done and shows `[X]`.
 
 Format:
 `mark <taskNumber>`
 
 Example:
-`mark 1`
+```
+mark 2
+```
 
-Expected outcome:
-- Task 1 becomes done and shows `[X]`.
+Output:
+```
+_______________________________________________________
+Nice! I've marked this task as done:
+   [D][X] return book (by: Jan 25 2025, 12:00PM)
+_______________________________________________________
+```
 
 ---
 
 ## Unmarking a task
 
 Marks a task as not done.
+Task becomes not done and shows `[ ]`.
 
 Format:
 `unmark <taskNumber>`
 
 Example:
-`unmark 1`
+```
+unmark 2
+```
 
-Expected outcome:
-- Task 1 becomes not done and shows `[ ]`.
+Output:
+```
+_______________________________________________________
+OK, I've marked this task as not done yet:
+   [D][ ] return book (by: Jan 25 2025, 12:00PM)
+_______________________________________________________
+```
 
 ---
 
+
+
+## Listing tasks
+
+Shows all tasks currently stored.
+
+Format: `list`
+
+Output:
+```
+_______________________________________________________
+Here are the tasks in your list:
+1. [T][ ] buy groceries
+2. [D][ ] return book (by: Jan 25 2025, 12:00PM)
+3. [E][ ] project meeting (from: 2pm to: 4pm)
+_______________________________________________________
+```
+
+---
 ## Deleting a task
 
-Deletes a task from the list.
+Deletes a task from the list at the given task number.
 
 Format:
 `delete <taskNumber>`
 
 Example:
-`delete 2`
+```
+delete 1
+```
 
-Expected outcome:
-- Task 2 is removed and Spark shows the deleted task.
-
+Output:
+```
+_______________________________________________________
+Noted. I've removed this task:
+   [T][ ] buy groceries
+Now you have 2 tasks in the list.
+_______________________________________________________
+```
 ---
 
 ## Finding tasks
 
-Finds tasks whose description contains a keyword (case-insensitive is recommended).
+Finds tasks whose description contains a keyword.
 
 Format:
 `find <keyword>`
 
 Example:
-`find book`
+```
+find book
+```
 
-Expected outcome:
-- Spark lists matching tasks only.
+Output:
+```
+_______________________________________________________
+Here are the matching tasks in your list:
+1. [D][ ] return book (by: Jan 25 2025, 12:00PM)
+_______________________________________________________
+```
 
 ---
+### Sort tasks
 
+Sorts your task list by deadline, earliest first. Tasks without deadline will be at the bottom. 
+
+**Format:** `sort`
+
+Example:
+```
+sort
+```
+
+After sorting, run `list` to view the tasks in the new order.
+
+---
 ## Saving and loading
 
 Spark automatically saves tasks after commands that change the list (add, mark, unmark, delete).
