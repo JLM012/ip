@@ -7,7 +7,7 @@ import java.util.List;
  * Main chatbot class that controls the UI, Task list and Storage.
  */
 public class Spark {
-    private Ui ui = new Ui();
+    private final Ui ui = new Ui();
     private TaskList tasks;
     private final Storage storage = new Storage(Paths.get("data", "spark.txt"));
     private boolean didLoadFail = false;
@@ -49,10 +49,8 @@ public class Spark {
             return "";
         }
 
-        String trimmed = input.trim();
-
         try {
-            String[] parsedInput = Parser.parse(trimmed);
+            String[] parsedInput = Parser.parse(input.trim());
             String command = parsedInput[0];
             String rest = parsedInput[1];
 
@@ -65,56 +63,35 @@ public class Spark {
                 return ui.getListMessage(tasks);
 
             case "mark": {
-                int index = Parser.parseIndex(rest, "Mark format: mark <taskNumber>");
-                Task marked = tasks.mark(index);
-                storage.save(tasks);
-                return ui.getMarkMessage(marked);
+                return markTask(rest);
             }
 
             case "unmark": {
-                int index = Parser.parseIndex(rest, "Unmark format: unmark <taskNumber>");
-                Task unmarked = tasks.unmark(index);
-                storage.save(tasks);
-                return ui.getUnmarkMessage(unmarked);
+                return unmarkTask(rest);
             }
 
             case "todo": {
-                Task todo = Parser.parseTodo(rest);
-                tasks.addTask(todo);
-                storage.save(tasks);
-                return ui.getAddedMessage(todo, tasks.getSize());
+                return addTask(Parser.parseTodo(rest));
             }
 
             case "deadline": {
-                Task deadline = Parser.parseDeadline(rest);
-                tasks.addTask(deadline);
-                storage.save(tasks);
-                return ui.getAddedMessage(deadline, tasks.getSize());
+                return addTask(Parser.parseDeadline(rest));
             }
 
             case "event": {
-                Task event = Parser.parseEvent(rest);
-                tasks.addTask(event);
-                storage.save(tasks);
-                return ui.getAddedMessage(event, tasks.getSize());
+                return addTask(Parser.parseEvent(rest));
             }
 
             case "delete": {
-                int index = Parser.parseIndex(rest, "Delete format: delete <taskNumber>");
-                Task deleted = tasks.deleteTask(index);
-                storage.save(tasks);
-                return ui.getDeletedMessage(deleted, tasks.getSize());
+                return deleteTask(rest);
             }
 
             case "find": {
-                String keyword = Parser.parseFind(rest);
-                return ui.getFindMessage(tasks.find(keyword));
+                return findTasks(rest);
             }
 
             case "sort": {
-                tasks.sortByDateTime();
-                storage.save(tasks);
-                return "Sorted tasks.\n" + ui.getListMessage(tasks);
+                return sortTasks();
             }
 
             default:
@@ -139,18 +116,11 @@ public class Spark {
                     " reverting to empty list \nReason: " + loadFailedMessage);
         }
 
-        while (true) {
+        while (!isExit) {
             String input = ui.readCommand();
+            String response = getResponse(input);
 
-            if (input.equals("bye")) {
-                ui.showBye();
-                break;
-            }
-            try {
-                handleInput(input);
-            } catch (SparkException e) {
-                ui.showError(e.getMessage());
-            }
+            System.out.println(response);
         }
     }
 
@@ -218,10 +188,10 @@ public class Spark {
      * @param task The task to be added.
      * @throws SparkException If saving to disk fails.
      */
-    private void addTask(Task task) throws SparkException {
+    private String addTask(Task task) throws SparkException {
         tasks.addTask(task);
-        ui.showAdded(task, tasks.getSize());
         storage.save(tasks);
+        return ui.getAddedMessage(task, tasks.getSize());
     }
 
     /**
@@ -230,11 +200,11 @@ public class Spark {
      * @param rest The argument string containing the task index.
      * @throws SparkException If the index is invalid or saving fails.
      */
-    private void markTask(String rest) throws SparkException {
+    private String markTask(String rest) throws SparkException {
         int index = Parser.parseIndex(rest, "Mark format: mark <taskNumber>");
         Task marked = tasks.mark(index);
-        ui.showMark(marked);
         storage.save(tasks);
+        return ui.getMarkMessage(marked);
     }
 
 
@@ -244,11 +214,11 @@ public class Spark {
      * @param rest The argument string containing the task index.
      * @throws SparkException If the index is invalid or saving fails.
      */
-    private void unmarkTask(String rest) throws SparkException {
+    private String unmarkTask(String rest) throws SparkException {
         int index = Parser.parseIndex(rest, "Unmark format: unmark <taskNumber>");
         Task unmarked = tasks.unmark(index);
-        ui.showUnmark(unmarked);
         storage.save(tasks);
+        return ui.getUnmarkMessage(unmarked);
     }
 
 
@@ -258,10 +228,27 @@ public class Spark {
      * @param rest The argument string containing the task index.
      * @throws SparkException If the index is invalid or saving fails.
      */
-    private void deleteTask(String rest) throws SparkException {
+    private String deleteTask(String rest) throws SparkException {
         int index = Parser.parseIndex(rest, "Delete format: delete <taskNumber>");
         Task deleted = tasks.deleteTask(index);
-        ui.showDeleted(deleted, tasks.getSize());
         storage.save(tasks);
+        return ui.getDeletedMessage(deleted, tasks.getSize());
+    }
+
+    /**
+     * Finds tasks matching the keyword and returns the response.
+     */
+    private String findTasks(String rest) throws SparkException {
+        String keyword = Parser.parseFind(rest);
+        return ui.getFindMessage(tasks.find(keyword));
+    }
+
+    /**
+     * Sorts tasks by date/time, saves to disk, and returns the response.
+     */
+    private String sortTasks() throws SparkException {
+        tasks.sortByDateTime();
+        storage.save(tasks);
+        return "Sorted tasks.\n" + ui.getListMessage(tasks);
     }
 }
